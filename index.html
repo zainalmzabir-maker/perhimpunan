@@ -38,16 +38,16 @@
         </div>
       </div>
 
-      <!-- TABS NAVIGATION (4 MENU) -->
+      <!-- TABS NAVIGATION (SUSUNAN: KEHADIRAN -> CATATAN -> DASHBOARD -> ADMIN) -->
       <nav class="flex bg-slate-100 p-1.5 rounded-xl gap-1 overflow-x-auto">
-        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm bg-white text-blue-900 shadow-xs transition flex items-center gap-1.5 whitespace-nowrap">
-          <i class="fa-solid fa-chart-pie text-blue-900"></i> Dashboard
-        </button>
-        <button onclick="switchTab('kehadiran')" id="tab-kehadiran" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm text-slate-600 hover:text-blue-900 transition flex items-center gap-1.5 whitespace-nowrap">
+        <button onclick="switchTab('kehadiran')" id="tab-kehadiran" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm bg-white text-blue-900 shadow-xs transition flex items-center gap-1.5 whitespace-nowrap">
           <i class="fa-solid fa-user-check"></i> e-Hadir (GPS)
         </button>
         <button onclick="switchTab('catatan')" id="tab-catatan" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm text-slate-600 hover:text-blue-900 transition flex items-center gap-1.5 whitespace-nowrap">
           <i class="fa-solid fa-book-bookmark"></i> Catatan Perhimpunan
+        </button>
+        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm text-slate-600 hover:text-blue-900 transition flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
         </button>
         <button onclick="switchTab('admin')" id="tab-admin" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm text-rose-700 hover:bg-rose-50 transition flex items-center gap-1.5 whitespace-nowrap">
           <i class="fa-solid fa-user-shield"></i> Admin
@@ -92,8 +92,163 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full space-y-6">
 
-    <!-- ==================== TAB 1: DASHBOARD UTAMA ==================== -->
-    <section id="page-dashboard" class="block space-y-6">
+    <!-- ==================== TAB 1: BORANG KEHADIRAN GEOFENCING GPS ==================== -->
+    <section id="page-kehadiran" class="block space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 p-5 sm:p-6 text-white space-y-1">
+          <span class="bg-blue-800 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block">
+            Radius Sah: 50 Meter Dari Titik GPS
+          </span>
+          <h2 class="text-lg sm:text-xl font-bold">Borang Pengesahan Kehadiran Majlis</h2>
+          <p class="text-blue-200 text-xs sm:text-sm">
+            Sila pastikan GPS peranti diaktifkan untuk pengesahan lokasi secara automatik.
+          </p>
+        </div>
+
+        <div class="p-5 sm:p-6 space-y-5">
+          <!-- Pilihan Program -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5">
+              <i class="fa-solid fa-list-check text-blue-900 mr-1"></i> Pilih Program / Majlis
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label class="cursor-pointer border-2 border-blue-900 bg-blue-50/60 p-3.5 rounded-xl flex items-center justify-between transition-all shadow-xs" onclick="selectProgram('perhimpunan')">
+                <div>
+                  <input type="radio" name="programRadio" id="prog_perhimpunan" value="perhimpunan" checked class="hidden">
+                  <span class="font-extrabold text-sm text-blue-950 block">Perhimpunan Rasmi</span>
+                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Dataran / Dewan Sekolah</span>
+                </div>
+                <i class="fa-solid fa-users text-blue-900 text-lg"></i>
+              </label>
+
+              <label class="cursor-pointer border border-slate-200 hover:border-emerald-400 p-3.5 rounded-xl flex items-center justify-between transition-all" onclick="selectProgram('quran')">
+                <div>
+                  <input type="radio" name="programRadio" id="prog_quran" value="quran" class="hidden">
+                  <span class="font-extrabold text-sm text-slate-800 block">Budaya Al-Quran</span>
+                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Surau / Dewan Terbuka</span>
+                </div>
+                <i class="fa-solid fa-book-quran text-emerald-700 text-lg"></i>
+              </label>
+
+              <label class="cursor-pointer border border-slate-200 hover:border-purple-400 p-3.5 rounded-xl flex items-center justify-between transition-all" onclick="selectProgram('moral')">
+                <div>
+                  <input type="radio" name="programRadio" id="prog_moral" value="moral" class="hidden">
+                  <span class="font-extrabold text-sm text-slate-800 block">Program Moral</span>
+                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Bilik Moral / Pusat Sumber</span>
+                </div>
+                <i class="fa-solid fa-heart-handshake text-purple-700 text-lg"></i>
+              </label>
+            </div>
+          </div>
+
+          <!-- Pilihan Nama Guru / AKP -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5">
+              <i class="fa-solid fa-user-tie text-blue-900 mr-1"></i> Nama Guru / AKP
+            </label>
+            <select id="selectNamaGuru" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-blue-600 outline-none text-sm cursor-pointer">
+            </select>
+          </div>
+
+          <!-- Kad Status GPS & Jarak Geofence -->
+          <div class="border rounded-2xl p-4 sm:p-5 transition-all bg-slate-50/80" id="gpsStatusCard">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center space-x-3">
+                <div id="gpsIconWrap" class="w-11 h-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg flex-shrink-0 pulse-ring">
+                  <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-800 text-sm" id="gpsStatusTitle">Mengimbas Lokasi GPS Anda...</h4>
+                  <p class="text-xs text-slate-500 font-medium" id="gpsStatusDesc">Sila benarkan ('Allow') akses lokasi pelayar.</p>
+                </div>
+              </div>
+
+              <div class="text-right bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-2xs">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Jarak ke Sasaran</span>
+                <span class="font-black text-base text-slate-800" id="liveDistanceText">-- meter</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-200 text-[11px] font-mono text-slate-500">
+              <div>
+                <span class="font-bold text-slate-600">Koordinat Anda:</span> 
+                <span id="displayUserCoords" class="text-blue-900 font-semibold">Menunggu GPS...</span>
+              </div>
+              <div>
+                <span class="font-bold text-slate-600">ID Peranti (Auto):</span> 
+                <span id="displayDeviceId" class="text-slate-800 font-semibold">Mengesan...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Butang Pengesahan Kehadiran -->
+          <button onclick="submitKehadiran()" id="btnSubmitAttendance" disabled class="w-full py-3.5 px-6 rounded-xl font-black text-sm transition-all duration-200 flex items-center justify-center gap-2.5 bg-slate-200 text-slate-400 cursor-not-allowed shadow-none">
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="btnSubmitText">Sila Berada Dalam Zon 50 Meter Untuk Mendaftar</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: CATATAN PERHIMPUNAN RASMI ==================== -->
+    <section id="page-catatan" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-teal-900 via-teal-800 to-cyan-900 p-5 sm:p-6 text-white space-y-1">
+          <span class="bg-teal-700 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block">
+            Perhimpunan Rasmi Mingguan
+          </span>
+          <h2 class="text-lg sm:text-xl font-bold">Borang Catatan Ucapan & Amanat Perhimpunan</h2>
+          <p class="text-teal-200 text-xs sm:text-sm">
+            Direkodkan oleh guru bertugas mingguan bagi tujuan dokumentasi dan rujukan pihak sekolah.
+          </p>
+        </div>
+
+        <div class="p-5 sm:p-6 space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Guru Berucap / Jawatan</label>
+              <input type="text" id="inputGuruBerucap" placeholder="Contoh: En. Rosli (GPK Kokurikulum) / Pengetua" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tajuk / Fokus Ucapan</label>
+              <input type="text" id="inputTajukUcapan" placeholder="Contoh: Disiplin Kehadiran & Sahsiah Terpuji" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Isi Penting Ucapan / Pesanan</label>
+            <textarea id="inputIsiUcapan" rows="4" placeholder="Catatkan poin-poin utama ucapan, arahan pentadbir, atau pengumuman penting perhimpunan..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 font-normal text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none leading-relaxed"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Guru Pencatat</label>
+              <select id="selectPencatatCatatan" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none cursor-pointer">
+              </select>
+            </div>
+            <div class="pt-5 sm:pt-4 flex justify-end">
+              <button onclick="submitCatatanPerhimpunan()" id="btnSaveCatatan" class="w-full sm:w-auto bg-teal-800 hover:bg-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Catatan Perhimpunan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arkib Catatan Perhimpunan -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex justify-between items-center">
+          <h3 class="font-bold text-slate-800 text-sm sm:text-base">Arkib Catatan Ucapan Perhimpunan</h3>
+          <span class="text-xs bg-teal-100 text-teal-800 font-bold px-2.5 py-1 rounded-full" id="countCatatanBadge">0 Catatan</span>
+        </div>
+        <div id="catatanCardsList" class="p-5 space-y-4 max-h-[500px] overflow-y-auto">
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: DASHBOARD (SEBELUM MENU ADMIN) ==================== -->
+    <section id="page-dashboard" class="hidden space-y-6">
       <!-- Kad Metrik Ringkasan Atas -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Kadar Kehadiran -->
@@ -231,161 +386,6 @@
               <tr><td colspan="5" class="text-center py-6 text-slate-400 italic">Memuatkan data kehadiran...</td></tr>
             </tbody>
           </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== TAB 2: BORANG KEHADIRAN GEOFENCING GPS ==================== -->
-    <section id="page-kehadiran" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 p-5 sm:p-6 text-white space-y-1">
-          <span class="bg-blue-800 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block">
-            Radius Sah: 50 Meter Dari Titik GPS
-          </span>
-          <h2 class="text-lg sm:text-xl font-bold">Borang Pengesahan Kehadiran Majlis</h2>
-          <p class="text-blue-200 text-xs sm:text-sm">
-            Sila pastikan GPS peranti diaktifkan untuk pengesahan lokasi secara automatik.
-          </p>
-        </div>
-
-        <div class="p-5 sm:p-6 space-y-5">
-          <!-- Pilihan Program -->
-          <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5">
-              <i class="fa-solid fa-list-check text-blue-900 mr-1"></i> Pilih Program / Majlis
-            </label>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <label class="cursor-pointer border-2 border-blue-900 bg-blue-50/60 p-3.5 rounded-xl flex items-center justify-between transition-all" onclick="selectProgram('perhimpunan')">
-                <div>
-                  <input type="radio" name="programRadio" id="prog_perhimpunan" value="perhimpunan" checked class="hidden">
-                  <span class="font-extrabold text-sm text-blue-950 block">Perhimpunan Rasmi</span>
-                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Dataran / Dewan Sekolah</span>
-                </div>
-                <i class="fa-solid fa-users text-blue-900 text-lg"></i>
-              </label>
-
-              <label class="cursor-pointer border border-slate-200 hover:border-emerald-400 p-3.5 rounded-xl flex items-center justify-between transition-all" onclick="selectProgram('quran')">
-                <div>
-                  <input type="radio" name="programRadio" id="prog_quran" value="quran" class="hidden">
-                  <span class="font-extrabold text-sm text-slate-800 block">Budaya Al-Quran</span>
-                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Surau / Dewan Terbuka</span>
-                </div>
-                <i class="fa-solid fa-book-quran text-emerald-700 text-lg"></i>
-              </label>
-
-              <label class="cursor-pointer border border-slate-200 hover:border-purple-400 p-3.5 rounded-xl flex items-center justify-between transition-all" onclick="selectProgram('moral')">
-                <div>
-                  <input type="radio" name="programRadio" id="prog_moral" value="moral" class="hidden">
-                  <span class="font-extrabold text-sm text-slate-800 block">Program Moral</span>
-                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Bilik Moral / Pusat Sumber</span>
-                </div>
-                <i class="fa-solid fa-heart-handshake text-purple-700 text-lg"></i>
-              </label>
-            </div>
-          </div>
-
-          <!-- Pilihan Nama Guru / AKP -->
-          <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5">
-              <i class="fa-solid fa-user-tie text-blue-900 mr-1"></i> Nama Guru / AKP
-            </label>
-            <select id="selectNamaGuru" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-blue-600 outline-none text-sm cursor-pointer">
-            </select>
-          </div>
-
-          <!-- Kad Status GPS & Jarak Geofence -->
-          <div class="border rounded-2xl p-4 sm:p-5 transition-all bg-slate-50/80" id="gpsStatusCard">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <div class="flex items-center space-x-3">
-                <div id="gpsIconWrap" class="w-11 h-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg flex-shrink-0 pulse-ring">
-                  <i class="fa-solid fa-satellite-dish"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-slate-800 text-sm" id="gpsStatusTitle">Mengimbas Lokasi GPS Anda...</h4>
-                  <p class="text-xs text-slate-500 font-medium" id="gpsStatusDesc">Sila benarkan ('Allow') akses lokasi pelayar.</p>
-                </div>
-              </div>
-
-              <div class="text-right bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-2xs">
-                <span class="text-[10px] uppercase font-bold text-slate-400 block">Jarak ke Sasaran</span>
-                <span class="font-black text-base text-slate-800" id="liveDistanceText">-- meter</span>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-200 text-[11px] font-mono text-slate-500">
-              <div>
-                <span class="font-bold text-slate-600">Koordinat Anda:</span> 
-                <span id="displayUserCoords" class="text-blue-900 font-semibold">Menunggu GPS...</span>
-              </div>
-              <div>
-                <span class="font-bold text-slate-600">ID Peranti (Auto):</span> 
-                <span id="displayDeviceId" class="text-slate-800 font-semibold">Mengesan...</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Butang Pengesahan Kehadiran -->
-          <button onclick="submitKehadiran()" id="btnSubmitAttendance" disabled class="w-full py-3.5 px-6 rounded-xl font-black text-sm transition-all duration-200 flex items-center justify-center gap-2.5 bg-slate-200 text-slate-400 cursor-not-allowed shadow-none">
-            <i class="fa-solid fa-location-dot"></i>
-            <span id="btnSubmitText">Sila Berada Dalam Zon 50 Meter Untuk Mendaftar</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== TAB 3: CATATAN PERHIMPUNAN RASMI ==================== -->
-    <section id="page-catatan" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="bg-gradient-to-r from-teal-900 via-teal-800 to-cyan-900 p-5 sm:p-6 text-white space-y-1">
-          <span class="bg-teal-700 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block">
-            Perhimpunan Rasmi Mingguan
-          </span>
-          <h2 class="text-lg sm:text-xl font-bold">Borang Catatan Ucapan & Amanat Perhimpunan</h2>
-          <p class="text-teal-200 text-xs sm:text-sm">
-            Direkodkan oleh guru bertugas mingguan bagi tujuan dokumentasi dan rujukan pihak sekolah.
-          </p>
-        </div>
-
-        <div class="p-5 sm:p-6 space-y-5">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Guru Berucap / Jawatan</label>
-              <input type="text" id="inputGuruBerucap" placeholder="Contoh: En. Rosli (GPK Kokurikulum) / Pengetua" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none">
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tajuk / Fokus Ucapan</label>
-              <input type="text" id="inputTajukUcapan" placeholder="Contoh: Disiplin Kehadiran & Sahsiah Terpuji" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Isi Penting Ucapan / Pesanan</label>
-            <textarea id="inputIsiUcapan" rows="4" placeholder="Catatkan poin-poin utama ucapan, arahan pentadbir, atau pengumuman penting perhimpunan..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 font-normal text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none leading-relaxed"></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-            <div>
-              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Guru Pencatat</label>
-              <select id="selectPencatatCatatan" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none cursor-pointer">
-              </select>
-            </div>
-            <div class="pt-5 sm:pt-4 flex justify-end">
-              <button onclick="submitCatatanPerhimpunan()" id="btnSaveCatatan" class="w-full sm:w-auto bg-teal-800 hover:bg-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
-                <i class="fa-solid fa-floppy-disk"></i> Simpan Catatan Perhimpunan
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Arkib Catatan Perhimpunan -->
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="px-5 py-4 border-b border-slate-200 flex justify-between items-center">
-          <h3 class="font-bold text-slate-800 text-sm sm:text-base">Arkib Catatan Ucapan Perhimpunan</h3>
-          <span class="text-xs bg-teal-100 text-teal-800 font-bold px-2.5 py-1 rounded-full" id="countCatatanBadge">0 Catatan</span>
-        </div>
-        <div id="catatanCardsList" class="p-5 space-y-4 max-h-[500px] overflow-y-auto">
         </div>
       </div>
     </section>
@@ -532,7 +532,7 @@
       loadAllData();
     };
 
-    // FUNGSI PAPARAN MASA & TARIKH AUTOMATIK (MENU LIVE)
+    // FUNGSI PAPARAN MASA & TARIKH AUTOMATIK
     function initClockAndCalendar() {
       const hariMap = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
       const bulanMap = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
@@ -550,7 +550,6 @@
         document.getElementById('liveDateAuto').innerText = dateStr;
         document.getElementById('liveTimeAuto').innerText = timeStr;
 
-        // Status sesi
         const hour = now.getHours();
         const sessionEl = document.getElementById('liveSessionStatus');
         if (sessionEl) {
@@ -616,8 +615,9 @@
       return devId;
     }
 
+    // TUKAR TAB MENGIKUT SUSUNAN
     function switchTab(tabId) {
-      ['dashboard', 'kehadiran', 'catatan', 'admin'].forEach(t => {
+      ['kehadiran', 'catatan', 'dashboard', 'admin'].forEach(t => {
         document.getElementById(`page-${t}`).classList.add('hidden');
         document.getElementById(`tab-${t}`).classList.remove('bg-white', 'text-blue-900', 'shadow-xs');
         document.getElementById(`tab-${t}`).classList.add('text-slate-600');
@@ -725,7 +725,7 @@
       }
     }
 
-    // SIMPAN KEHADIRAN (SUBMIT)
+    // SIMPAN KEHADIRAN
     async function submitKehadiran() {
       const selectGuru = document.getElementById('selectNamaGuru');
       const nama = selectGuru.value;
