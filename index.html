@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-Hadir Guru & Perhimpunan 2027 - SMK Kamarul Ariffin</title>
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .pulse-ring {
+      animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 14px rgba(37, 99, 235, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <!-- TOP HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3.5">
+        <img src="logo.png" alt="Logo SMK Kamarul Ariffin" class="h-12 sm:h-14 w-auto object-contain drop-shadow-sm" onerror="this.src='https://placehold.co/100x120?text=SMKKA'"/>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-black text-blue-900 tracking-tight">SMK KAMARUL ARIFFIN</h1>
+            <span class="bg-amber-400 text-slate-900 text-xs px-2 py-0.5 rounded-full font-black shadow-2xs">2027</span>
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-blue-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-location-crosshairs text-rose-600"></i> Sistem e-Hadir Guru, AKP & Catatan Perhimpunan
+          </p>
+        </div>
+      </div>
+
+      <!-- TABS NAVIGATION -->
+      <nav class="flex bg-slate-100 p-1.5 rounded-xl gap-1">
+        <button onclick="switchTab('kehadiran')" id="tab-kehadiran" class="px-3 py-1.5 rounded-lg font-bold text-xs sm:text-sm bg-white text-blue-900 shadow-sm transition">
+          <i class="fa-solid fa-user-check mr-1"></i> Kehadiran
+        </button>
+        <button onclick="switchTab('catatan')" id="tab-catatan" class="px-3 py-1.5 rounded-lg font-bold text-xs sm:text-sm text-slate-600 hover:text-blue-900 transition">
+          <i class="fa-solid fa-book-bookmark mr-1"></i> Catatan Perhimpunan
+        </button>
+        <button onclick="switchTab('admin')" id="tab-admin" class="px-3 py-1.5 rounded-lg font-bold text-xs sm:text-sm text-rose-700 hover:bg-rose-50 transition">
+          <i class="fa-solid fa-user-shield mr-1"></i> Admin
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full space-y-6">
+
+    <!-- ==================== TAB 1: KEHADIRAN GEOFENCING GPS ==================== -->
+    <section id="page-kehadiran" class="block space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 p-5 sm:p-6 text-white flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <span class="bg-blue-800 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block mb-1">
+              Radius Sah: 50 Meter Dari Titik GPS
+            </span>
+            <h2 class="text-lg sm:text-xl font-bold">Borang Pengesahan Kehadiran Majlis</h2>
+            <p class="text-blue-200 text-xs sm:text-sm">
+              Sila pastikan GPS peranti diaktifkan untuk pengesahan lokasi secara automatik.
+            </p>
+          </div>
+          <div class="text-right bg-white/10 px-3.5 py-2 rounded-xl border border-white/20">
+            <span class="text-[10px] uppercase font-bold text-blue-200 block tracking-wider">Masa Semasa</span>
+            <span id="liveClock" class="font-mono font-black text-base text-amber-300">--:--:--</span>
+          </div>
+        </div>
+
+        <div class="p-5 sm:p-6 space-y-5">
+          <!-- Pilihan Program -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5">
+              <i class="fa-solid fa-list-check text-blue-900 mr-1"></i> Pilih Program / Majlis
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label class="cursor-pointer border-2 border-blue-900 bg-blue-50/60 p-3.5 rounded-xl flex items-center justify-between transition-all" onclick="selectProgram('perhimpunan')">
+                <div>
+                  <input type="radio" name="programRadio" id="prog_perhimpunan" value="perhimpunan" checked class="hidden">
+                  <span class="font-extrabold text-sm text-blue-950 block">Perhimpunan Rasmi</span>
+                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Dataran / Dewan Sekolah</span>
+                </div>
+                <i class="fa-solid fa-users text-blue-900 text-lg"></i>
+              </label>
+
+              <label class="cursor-pointer border border-slate-200 hover:border-emerald-400 p-3.5 rounded-xl flex items-center justify-between transition-all" onclick="selectProgram('quran')">
+                <div>
+                  <input type="radio" name="programRadio" id="prog_quran" value="quran" class="hidden">
+                  <span class="font-extrabold text-sm text-slate-800 block">Budaya Al-Quran</span>
+                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Surau / Dewan Terbuka</span>
+                </div>
+                <i class="fa-solid fa-book-quran text-emerald-700 text-lg"></i>
+              </label>
+
+              <label class="cursor-pointer border border-slate-200 hover:border-purple-400 p-3.5 rounded-xl flex items-center justify-between transition-all" onclick="selectProgram('moral')">
+                <div>
+                  <input type="radio" name="programRadio" id="prog_moral" value="moral" class="hidden">
+                  <span class="font-extrabold text-sm text-slate-800 block">Program Moral</span>
+                  <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Bilik Moral / Pusat Sumber</span>
+                </div>
+                <i class="fa-solid fa-heart-handshake text-purple-700 text-lg"></i>
+              </label>
+            </div>
+          </div>
+
+          <!-- Pilihan Nama Guru / AKP -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5">
+              <i class="fa-solid fa-user-tie text-blue-900 mr-1"></i> Nama Guru / AKP
+            </label>
+            <select id="selectNamaGuru" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 font-semibold text-slate-800 focus:ring-2 focus:ring-blue-600 outline-none text-sm cursor-pointer">
+            </select>
+          </div>
+
+          <!-- Kad Status GPS & Jarak Geofence -->
+          <div class="border rounded-2xl p-4 sm:p-5 transition-all bg-slate-50/80" id="gpsStatusCard">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center space-x-3">
+                <div id="gpsIconWrap" class="w-11 h-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg flex-shrink-0 pulse-ring">
+                  <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-800 text-sm" id="gpsStatusTitle">Mengimbas Lokasi GPS Anda...</h4>
+                  <p class="text-xs text-slate-500 font-medium" id="gpsStatusDesc">Sila pastikan anda menekan 'Allow' pada notifikasi akses lokasi pelayar.</p>
+                </div>
+              </div>
+
+              <div class="text-right bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-2xs">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Jarak ke Sasaran</span>
+                <span class="font-black text-base text-slate-800" id="liveDistanceText">-- meter</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-200 text-[11px] font-mono text-slate-500">
+              <div>
+                <span class="font-bold text-slate-600">Koordinat Anda:</span> 
+                <span id="displayUserCoords" class="text-blue-900 font-semibold">Menunggu GPS...</span>
+              </div>
+              <div>
+                <span class="font-bold text-slate-600">ID Peranti (Auto):</span> 
+                <span id="displayDeviceId" class="text-slate-800 font-semibold">Mengesan...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Butang Pengesahan Kehadiran -->
+          <button onclick="submitKehadiran()" id="btnSubmitAttendance" disabled class="w-full py-3.5 px-6 rounded-xl font-black text-sm transition-all duration-200 flex items-center justify-center gap-2.5 bg-slate-200 text-slate-400 cursor-not-allowed shadow-none">
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="btnSubmitText">Sila Berada Dalam Zon 50 Meter Untuk Mendaftar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Jadual Kehadiran Terkini Hari Ini -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex flex-wrap justify-between items-center gap-3">
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Senarai Kehadiran Disahkan Hari Ini</h3>
+            <p class="text-xs text-slate-500">Rekod pendaftaran guru dan AKP mengikut masa dan jarak sah GPS.</p>
+          </div>
+          <button onclick="loadAllData()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i> Muat Semula
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 font-bold text-xs uppercase border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-4">Masa</th>
+                <th class="py-3 px-4">Program</th>
+                <th class="py-3 px-4">Nama Guru / AKP</th>
+                <th class="py-3 px-4">Jarak</th>
+                <th class="py-3 px-4">ID Peranti</th>
+                <th class="py-3 px-4">Status</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceTableBody" class="divide-y divide-slate-100 text-xs">
+              <tr><td colspan="6" class="text-center py-6 text-slate-400 italic">Memuatkan rekod pendaftaran...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: CATATAN PERHIMPUNAN RASMI ==================== -->
+    <section id="page-catatan" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-teal-900 via-teal-800 to-cyan-900 p-5 sm:p-6 text-white space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="bg-teal-700 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block">
+              Perhimpunan Rasmi Mingguan
+            </span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-bold">Borang Catatan Ucapan & Amanat Perhimpunan</h2>
+          <p class="text-teal-200 text-xs sm:text-sm">
+            Direkodkan oleh guru bertugas mingguan bagi tujuan dokumentasi dan rujukan pihak sekolah.
+          </p>
+        </div>
+
+        <div class="p-5 sm:p-6 space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Guru Berucap / Jawatan</label>
+              <input type="text" id="inputGuruBerucap" placeholder="Contoh: En. Rosli (GPK Kokurikulum) / Pengetua" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tajuk / Fokus Ucapan</label>
+              <input type="text" id="inputTajukUcapan" placeholder="Contoh: Disiplin Kehadiran & Sahsiah Terpuji" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Isi Penting Ucapan / Pesanan</label>
+            <textarea id="inputIsiUcapan" rows="4" placeholder="Catatkan poin-poin utama ucapan, arahan pentadbir, atau pengumuman penting perhimpunan..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 font-normal text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none leading-relaxed"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Guru Pencatat</label>
+              <select id="selectPencatatCatatan" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 font-semibold text-slate-800 text-sm focus:ring-2 focus:ring-teal-600 outline-none cursor-pointer">
+              </select>
+            </div>
+            <div class="pt-5 sm:pt-4 flex justify-end">
+              <button onclick="submitCatatanPerhimpunan()" id="btnSaveCatatan" class="w-full sm:w-auto bg-teal-800 hover:bg-teal-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Catatan Perhimpunan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Senarai Rekod Catatan Perhimpunan -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex justify-between items-center">
+          <h3 class="font-bold text-slate-800 text-sm sm:text-base">Arkib Catatan Ucapan Perhimpunan</h3>
+          <span class="text-xs bg-teal-100 text-teal-800 font-bold px-2.5 py-1 rounded-full" id="countCatatanBadge">0 Catatan</span>
+        </div>
+        <div id="catatanCardsList" class="p-5 space-y-4 max-h-[500px] overflow-y-auto">
+          <!-- Kad catatan diisi JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: ADMIN PERHIMPUNAN ==================== -->
+    <section id="page-admin" class="hidden space-y-6">
+      <!-- Admin Login Box -->
+      <div id="adminAuthBox" class="max-w-md mx-auto bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="text-center space-y-2">
+          <div class="w-14 h-14 bg-rose-100 text-rose-700 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800">Akses Pentadbir (Admin)</h3>
+          <p class="text-xs text-slate-500">Sila masukkan kata laluan untuk melihat laporan kehadiran penuh & pengurusan pangkalan data.</p>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Kata Laluan Admin</label>
+          <input type="password" id="adminPasswordInput" placeholder="Masukkan password..." class="w-full border border-slate-300 rounded-xl px-4 py-2.5 font-medium outline-none focus:ring-2 focus:ring-rose-500 text-slate-800">
+        </div>
+        <button onclick="verifyAdminPassword()" class="w-full bg-rose-700 hover:bg-rose-800 text-white font-bold py-2.5 rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-key"></i> Sahkan Kata Laluan
+        </button>
+      </div>
+
+      <!-- Admin Panel (Muncul selepas login berjaya) -->
+      <div id="adminPanelBox" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+          <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-100 pb-4">
+            <div>
+              <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-blue-900"></i> Panel Kawalan Pentadbir
+              </h3>
+              <p class="text-xs text-slate-500">Analisis kehadiran warga sekolah bagi sesi persekolahan 2027.</p>
+            </div>
+            <button onclick="adminLogout()" class="text-xs text-rose-600 font-bold hover:underline">
+              <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Log Keluar Admin
+            </button>
+          </div>
+
+          <!-- Ringkasan Kehadiran Guru Hari Ini -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+              <p class="text-xs font-bold text-blue-800">Jumlah Warga (Guru & AKP)</p>
+              <p class="text-2xl font-black text-blue-950 mt-1">31 Orang</p>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+              <p class="text-xs font-bold text-emerald-800">Hadir Hari Ini</p>
+              <p class="text-2xl font-black text-emerald-700 mt-1" id="adminCountPresent">0 Orang</p>
+            </div>
+            <div class="bg-rose-50 border border-rose-200 p-4 rounded-xl">
+              <p class="text-xs font-bold text-rose-800">Belum Sahkan Hadir</p>
+              <p class="text-2xl font-black text-rose-700 mt-1" id="adminCountAbsent">0 Orang</p>
+            </div>
+          </div>
+
+          <!-- Senarai Guru Yang Belum Mengesahkan Kehadiran -->
+          <div class="space-y-2">
+            <h4 class="font-bold text-sm text-slate-700">Senarai Guru / AKP Belum Mengesahkan Kehadiran Hari Ini:</h4>
+            <div id="adminAbsentListContainer" class="p-4 bg-slate-50 rounded-xl border border-slate-200 max-h-[220px] overflow-y-auto text-xs grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <!-- Senarai dijana JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+    &copy; 2027 SMK Kamarul Ariffin (JEA7039). Dikuasakan oleh Google Cloud & GitHub Pages.
+  </footer>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // URL GOOGLE APPS SCRIPT ANDA
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycby_gSdxY-hmdQa1xtHsn_eifpxeNuizGBcbgeruC4PrBavRT1DLvqhJjC3cV0mYhgHq/exec";
+
+    // KOORDINAT TITIK GPS
+    const PROGRAM_COORDS = {
+      "perhimpunan": {
+        name: "Perhimpunan Rasmi",
+        lat: 2.399244,
+        lon: 103.028091,
+        radius: 50
+      },
+      "quran": {
+        name: "Budaya Al-Quran",
+        lat: 2.400042,
+        lon: 103.028212,
+        radius: 50
+      },
+      "moral": {
+        name: "Program Moral",
+        lat: 2.399618,
+        lon: 103.028126,
+        radius: 50
+      }
+    };
+
+    // SENARAI GURU & AKP RASMI APDM JEA7039
+    const SENARAI_WARGA = [
+      { nama: "ABD HADI B ADMAN", kat: "GURU" },
+      { nama: "JESSICA CHAN LAI PENG", kat: "GURU" },
+      { nama: "LAVANYA A/P VEJAYAN", kat: "GURU" },
+      { nama: "MASNON BIN AMAT", kat: "GURU" },
+      { nama: "MOHD NIZAM BIN SUBANI", kat: "GURU" },
+      { nama: "MOHD RIDUWAN BIN MOHD YASAN", kat: "GURU" },
+      { nama: "MUHAMMAD AMIRUL AIMAN BIN ZAKARIA", kat: "GURU" },
+      { nama: "MUHAMMAD SYADZA BIN YUSOF", kat: "GURU" },
+      { nama: "NORFAIZAH BINTI ISMAIL", kat: "GURU" },
+      { nama: "NORHAMIZAH BINTI SHAFIE", kat: "GURU" },
+      { nama: "NORHAYATI BT MD. ZAIN", kat: "GURU" },
+      { nama: "NORIHAN BINTI YUSOF", kat: "GURU" },
+      { nama: "NORUL HAFIDZAH BINTI HASSAN", kat: "GURU" },
+      { nama: "NUR AINA NAJWA BINTI MOHD NOR", kat: "GURU" },
+      { nama: "NUR FATIN NAZIRAH BINTI RASHIDI", kat: "GURU" },
+      { nama: "NURUL HAMIZAH BINTI MD SAID", kat: "GURU" },
+      { nama: "OSKASMAZILA BINTI OSMAN", kat: "GURU" },
+      { nama: "ROHANA BINTI JASMIN", kat: "GURU" },
+      { nama: "SITI HANIZA BINTI IMRAN", kat: "GURU" },
+      { nama: "SITI NUR HAKIMAH BINTI MOHD NOOR", kat: "GURU" },
+      { nama: "TAMILVANI A/P KRISHNAN", kat: "GURU" },
+      { nama: "TAN BEE KEAN", kat: "GURU" },
+      { nama: "TANTY BTE RAMLI", kat: "GURU" },
+      { nama: "ZAIMAH BINTI SAMAD", kat: "GURU" },
+      { nama: "ZAINAL B MOHD ZABIR", kat: "GURU" },
+      { nama: "MOHAMAAD FADZELI BIN AZAM", kat: "GURU" },
+      { nama: "ALAWIYAH BT ADNAN", kat: "AKP" },
+      { nama: "EDI NOOR FADLI BIN MOHD ZEN", kat: "AKP" },
+      { nama: "FADZILAH BT BINGAN", kat: "AKP" },
+      { nama: "SUZANA BINTI SULAIMAN", kat: "AKP" },
+      { nama: "ZARINA MERIAM BTE HJ. OTHMAN", kat: "AKP" }
+    ];
+
+    let selectedProgramKey = "perhimpunan";
+    let userCurrentLat = null;
+    let userCurrentLon = null;
+    let currentDistance = null;
+    let deviceFingerprintId = "";
+    let serverAttendanceData = [];
+    let serverCatatanData = [];
+
+    window.onload = function() {
+      initClock();
+      populateDropdowns();
+      deviceFingerprintId = getOrGenerateDeviceId();
+      document.getElementById('displayDeviceId').innerText = deviceFingerprintId;
+      startLocationWatch();
+      loadAllData();
+    };
+
+    function initClock() {
+      setInterval(() => {
+        document.getElementById('liveClock').innerText = new Date().toLocaleTimeString('ms-MY', { hour12: false });
+      }, 1000);
+      document.getElementById('liveClock').innerText = new Date().toLocaleTimeString('ms-MY', { hour12: false });
+    }
+
+    function populateDropdowns() {
+      const selectGuru = document.getElementById('selectNamaGuru');
+      const selectPencatat = document.getElementById('selectPencatatCatatan');
+
+      selectGuru.innerHTML = '<option value="" disabled selected>-- Sila Pilih Nama Anda --</option>';
+      selectPencatat.innerHTML = '<option value="" disabled selected>-- Pilih Nama Guru Pencatat --</option>';
+
+      // Guru Group
+      const optGGuru = document.createElement('optgroup');
+      optGGuru.label = "SENARAI GURU (26 ORANG)";
+      const optGPencatat = document.createElement('optgroup');
+      optGPencatat.label = "SENARAI GURU";
+
+      SENARAI_WARGA.filter(w => w.kat === "GURU").forEach(g => {
+        const o1 = document.createElement('option');
+        o1.value = g.nama;
+        o1.textContent = g.nama;
+        optGGuru.appendChild(o1);
+
+        const o2 = document.createElement('option');
+        o2.value = g.nama;
+        o2.textContent = g.nama;
+        optGPencatat.appendChild(o2);
+      });
+      selectGuru.appendChild(optGGuru);
+      selectPencatat.appendChild(optGPencatat);
+
+      // AKP Group
+      const optGAKP = document.createElement('optgroup');
+      optGAKP.label = "ANGGOTA KUMPULAN PELAKSANA (AKP)";
+      SENARAI_WARGA.filter(w => w.kat === "AKP").forEach(a => {
+        const opt = document.createElement('option');
+        opt.value = a.nama;
+        opt.textContent = a.nama;
+        optGAKP.appendChild(opt);
+      });
+      selectGuru.appendChild(optGAKP);
+    }
+
+    function getOrGenerateDeviceId() {
+      let devId = localStorage.getItem('smkka_teacher_device_id');
+      if (!devId) {
+        const screenCode = `${window.screen.width}x${window.screen.height}`;
+        const randomHex = Math.random().toString(16).substring(2, 8).toUpperCase();
+        devId = `DEV-${screenCode}-${randomHex}`;
+        localStorage.setItem('smkka_teacher_device_id', devId);
+      }
+      return devId;
+    }
+
+    function switchTab(tabId) {
+      ['kehadiran', 'catatan', 'admin'].forEach(t => {
+        document.getElementById(`page-${t}`).classList.add('hidden');
+        document.getElementById(`tab-${t}`).classList.remove('bg-white', 'text-blue-900', 'shadow-sm');
+        document.getElementById(`tab-${t}`).classList.add('text-slate-600');
+      });
+
+      document.getElementById(`page-${tabId}`).classList.remove('hidden');
+      document.getElementById(`tab-${tabId}`).classList.add('bg-white', 'text-blue-900', 'shadow-sm');
+      document.getElementById(`tab-${tabId}`).classList.remove('text-slate-600');
+
+      if (tabId === 'admin') renderAdminStats();
+    }
+
+    function selectProgram(progKey) {
+      selectedProgramKey = progKey;
+      ['perhimpunan', 'quran', 'moral'].forEach(k => {
+        const rad = document.getElementById(`prog_${k}`);
+        const parent = rad.closest('label');
+        if (k === progKey) {
+          rad.checked = true;
+          parent.className = "cursor-pointer border-2 border-blue-900 bg-blue-50/60 p-3.5 rounded-xl flex items-center justify-between transition-all shadow-xs";
+        } else {
+          rad.checked = false;
+          parent.className = "cursor-pointer border border-slate-200 hover:border-slate-300 p-3.5 rounded-xl flex items-center justify-between transition-all";
+        }
+      });
+
+      if (userCurrentLat !== null && userCurrentLon !== null) {
+        evaluateDistance(userCurrentLat, userCurrentLon);
+      }
+    }
+
+    // GEOLOCATION ENGINE
+    function startLocationWatch() {
+      if (!navigator.geolocation) {
+        updateGPSUIStatus(false, "Pelayar Tidak Menyokong GPS", "Gunakan pelayar moden pada telefon pintar anda.");
+        return;
+      }
+
+      navigator.geolocation.watchPosition(
+        (position) => {
+          userCurrentLat = position.coords.latitude;
+          userCurrentLon = position.coords.longitude;
+          document.getElementById('displayUserCoords').innerText = `${userCurrentLat.toFixed(6)}, ${userCurrentLon.toFixed(6)}`;
+          evaluateDistance(userCurrentLat, userCurrentLon);
+        },
+        (error) => {
+          let msg = "Sila aktifkan GPS telefon anda.";
+          if (error.code === 1) msg = "Kebenaran GPS dinafikan. Sila klik 'Allow' pada tetapan pelayar anda.";
+          updateGPSUIStatus(false, "GPS Tidak Aktif / Akses Disekat", msg);
+        },
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+      );
+    }
+
+    function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const toRad = Math.PI / 180;
+      const dLat = (lat2 - lat1) * toRad;
+      const dLon = (lon2 - lon1) * toRad;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * toRad) * Math.cos(lat2 * toRad) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return Math.round(R * c);
+    }
+
+    function evaluateDistance(lat, lon) {
+      const target = PROGRAM_COORDS[selectedProgramKey];
+      currentDistance = calculateHaversineDistance(lat, lon, target.lat, target.lon);
+
+      document.getElementById('liveDistanceText').innerText = `${currentDistance} meter`;
+
+      const btn = document.getElementById('btnSubmitAttendance');
+      const btnText = document.getElementById('btnSubmitText');
+
+      if (currentDistance <= target.radius) {
+        updateGPSUIStatus(true, "Lokasi Sah: Anda Berada Di Dalam Zon!", `Dikesan ${currentDistance}m dari sasaran ${target.name}.`);
+        btn.disabled = false;
+        btn.className = "w-full py-3.5 px-6 rounded-xl font-black text-sm transition-all duration-200 flex items-center justify-center gap-2.5 bg-blue-900 hover:bg-blue-800 text-white cursor-pointer shadow-md shadow-blue-950/20";
+        btnText.innerText = `Sahkan Kehadiran Sekarang (${target.name})`;
+      } else {
+        const diff = currentDistance - target.radius;
+        updateGPSUIStatus(false, "Di Luar Zon Geofence!", `Anda berada ${currentDistance}m dari lokasi. Perlu bergerak ${diff}m lebih dekat.`);
+        btn.disabled = true;
+        btn.className = "w-full py-3.5 px-6 rounded-xl font-black text-sm transition-all duration-200 flex items-center justify-center gap-2.5 bg-slate-200 text-slate-400 cursor-not-allowed shadow-none";
+        btnText.innerText = `Luar Zon Geofence (${currentDistance}m / Maks 50m)`;
+      }
+    }
+
+    function updateGPSUIStatus(isInZone, title, desc) {
+      const card = document.getElementById('gpsStatusCard');
+      const iconWrap = document.getElementById('gpsIconWrap');
+      document.getElementById('gpsStatusTitle').innerText = title;
+      document.getElementById('gpsStatusDesc').innerText = desc;
+
+      if (isInZone) {
+        card.className = "border-2 border-emerald-400 bg-emerald-50/50 rounded-2xl p-4 sm:p-5 transition-all";
+        iconWrap.className = "w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg flex-shrink-0";
+        iconWrap.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+      } else {
+        card.className = "border border-rose-300 bg-rose-50/40 rounded-2xl p-4 sm:p-5 transition-all";
+        iconWrap.className = "w-11 h-11 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-lg flex-shrink-0";
+        iconWrap.innerHTML = `<i class="fa-solid fa-location-pin-lock"></i>`;
+      }
+    }
+
+    // SIMPAN KEHADIRAN (SUBMIT)
+    async function submitKehadiran() {
+      const selectGuru = document.getElementById('selectNamaGuru');
+      const nama = selectGuru.value;
+
+      if (!nama) {
+        alert("Sila pilih nama anda terlebih dahulu daripada senarai.");
+        selectGuru.focus();
+        return;
+      }
+
+      if (currentDistance === null || currentDistance > PROGRAM_COORDS[selectedProgramKey].radius) {
+        alert("Ralat Geofence: Anda berada di luar radius 50 meter dari titik lokasi.");
+        return;
+      }
+
+      const targetProgram = PROGRAM_COORDS[selectedProgramKey].name;
+      const matching = SENARAI_WARGA.find(w => w.nama === nama);
+      const kategori = matching ? matching.kat : "GURU";
+
+      const now = new Date();
+      const todayStr = now.toISOString().split('T')[0];
+      const timeStr = now.toLocaleTimeString('ms-MY', { hour12: false });
+
+      const payload = {
+        action: "submitAttendance",
+        tarikh: todayStr,
+        masa: timeStr,
+        program: targetProgram,
+        nama: nama,
+        kategori: kategori,
+        jarakMeter: currentDistance,
+        userCoords: `${userCurrentLat.toFixed(6)}, ${userCurrentLon.toFixed(6)}`,
+        deviceId: deviceFingerprintId
+      };
+
+      const btn = document.getElementById('btnSubmitAttendance');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan Kehadiran...`;
+
+      try {
+        await fetch(GAS_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        alert(`Kehadiran bagi ${nama} (${targetProgram}) berjaya disimpan ke Google Sheets!`);
+        setTimeout(loadAllData, 1500);
+      } catch (e) {
+        alert("Ralat: " + e.message);
+      } finally {
+        evaluateDistance(userCurrentLat, userCurrentLon);
+      }
+    }
+
+    // SIMPAN CATATAN PERHIMPUNAN
+    async function submitCatatanPerhimpunan() {
+      const guruBerucap = document.getElementById('inputGuruBerucap').value.trim();
+      const tajuk = document.getElementById('inputTajukUcapan').value.trim();
+      const isiUcapan = document.getElementById('inputIsiUcapan').value.trim();
+      const pencatat = document.getElementById('selectPencatatCatatan').value;
+
+      if (!guruBerucap || !isiUcapan || !pencatat) {
+        alert("Sila lengkapkan maklumat Guru Berucap, Isi Ucapan dan Nama Pencatat.");
+        return;
+      }
+
+      const now = new Date();
+      const payload = {
+        action: "submitCatatan",
+        tarikh: now.toISOString().split('T')[0],
+        masa: now.toLocaleTimeString('ms-MY', { hour12: false }),
+        guruBerucap: guruBerucap,
+        tajuk: tajuk || "Amanat Perhimpunan",
+        isiUcapan: isiUcapan,
+        pencatat: pencatat
+      };
+
+      const btn = document.getElementById('btnSaveCatatan');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+
+      try {
+        await fetch(GAS_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        alert("Catatan perhimpunan berjaya direkodkan!");
+        document.getElementById('inputGuruBerucap').value = '';
+        document.getElementById('inputTajukUcapan').value = '';
+        document.getElementById('inputIsiUcapan').value = '';
+        setTimeout(loadAllData, 1500);
+      } catch (e) {
+        alert("Ralat menyimpan catatan: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan Catatan Perhimpunan`;
+      }
+    }
+
+    // MUAT TURUN SEMUA DATA
+    async function loadAllData() {
+      const refreshIcon = document.getElementById('refreshIcon');
+      if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
+      try {
+        const res = await fetch(GAS_API_URL);
+        const data = await res.json();
+
+        if (data.attendance) {
+          serverAttendanceData = data.attendance;
+          renderAttendanceTable(serverAttendanceData);
+        }
+
+        if (data.catatan) {
+          serverCatatanData = data.catatan;
+          renderCatatanCards(serverCatatanData);
+        }
+      } catch (e) {
+        console.warn("Gagal memuat turun data:", e);
+      } finally {
+        if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+      }
+    }
+
+    function renderAttendanceTable(records) {
+      const tbody = document.getElementById('attendanceTableBody');
+      tbody.innerHTML = '';
+
+      const today = new Date().toISOString().split('T')[0];
+      const todayRecords = records.filter(r => r.tarikh === today);
+
+      if (todayRecords.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 italic">Belum ada pengesahan kehadiran direkodkan untuk hari ini.</td></tr>`;
+        return;
+      }
+
+      todayRecords.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold text-slate-700">${row.masa}</td>
+          <td class="py-3 px-4"><span class="font-bold text-blue-900">${row.program}</span></td>
+          <td class="py-3 px-4 font-semibold text-slate-800">${row.nama}</td>
+          <td class="py-3 px-4 font-mono text-slate-600">${row.jarak}</td>
+          <td class="py-3 px-4 font-mono text-[10px] text-slate-400">${row.deviceId}</td>
+          <td class="py-3 px-4">
+            <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded text-[11px] font-bold">
+              <i class="fa-solid fa-check"></i> Sah (GPS)
+            </span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderCatatanCards(notes) {
+      const container = document.getElementById('catatanCardsList');
+      container.innerHTML = '';
+      document.getElementById('countCatatanBadge').innerText = `${notes.length} Catatan`;
+
+      if (notes.length === 0) {
+        container.innerHTML = `<p class="text-center py-6 text-slate-400 text-xs italic">Belum ada catatan perhimpunan direkodkan.</p>`;
+        return;
+      }
+
+      // Susun terkini di atas
+      const sorted = [...notes].reverse();
+
+      sorted.forEach(note => {
+        const div = document.createElement('div');
+        div.className = "bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2 hover:bg-white transition";
+        div.innerHTML = `
+          <div class="flex flex-wrap justify-between items-start gap-2 border-b border-slate-200/60 pb-2">
+            <div>
+              <h4 class="font-bold text-teal-950 text-sm sm:text-base">${note.guruBerucap}</h4>
+              <p class="text-xs font-semibold text-teal-800">${note.tajuk}</p>
+            </div>
+            <div class="text-right text-[11px] font-mono text-slate-500">
+              <span class="font-bold">${note.tarikh}</span> | <span>${note.masa}</span>
+            </div>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed">${note.isiUcapan}</p>
+          <div class="text-[11px] text-slate-400 italic pt-1 text-right">
+            Dicatat oleh: <span class="font-semibold text-slate-600">${note.pencatat}</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // ==================== ADMIN LOGIC ====================
+    function verifyAdminPassword() {
+      const pwd = document.getElementById('adminPasswordInput').value;
+      if (pwd === "adminperhimpunan") {
+        document.getElementById('adminAuthBox').classList.add('hidden');
+        document.getElementById('adminPanelBox').classList.remove('hidden');
+        document.getElementById('adminPasswordInput').value = '';
+        renderAdminStats();
+      } else {
+        alert("Kata laluan salah! Sila masukkan 'adminperhimpunan'.");
+      }
+    }
+
+    function adminLogout() {
+      document.getElementById('adminAuthBox').classList.remove('hidden');
+      document.getElementById('adminPanelBox').classList.add('hidden');
+    }
+
+    function renderAdminStats() {
+      const today = new Date().toISOString().split('T')[0];
+      const todayAttendance = serverAttendanceData.filter(r => r.tarikh === today);
+      const presentNames = todayAttendance.map(r => r.nama);
+
+      const totalWarga = SENARAI_WARGA.length;
+      const hadirCount = todayAttendance.length;
+      const absentCount = Math.max(0, totalWarga - hadirCount);
+
+      document.getElementById('adminCountPresent').innerText = `${hadirCount} Orang`;
+      document.getElementById('adminCountAbsent').innerText = `${absentCount} Orang`;
+
+      const absentContainer = document.getElementById('adminAbsentListContainer');
+      absentContainer.innerHTML = '';
+
+      const absentList = SENARAI_WARGA.filter(w => !presentNames.includes(w.nama));
+
+      if (absentList.length === 0) {
+        absentContainer.innerHTML = `<p class="col-span-2 text-center text-emerald-700 py-4 font-bold">Hebat! Semua guru dan AKP telah mengesahkan kehadiran hari ini.</p>`;
+      } else {
+        absentList.forEach((w, idx) => {
+          const item = document.createElement('div');
+          item.className = "flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200";
+          item.innerHTML = `
+            <span class="font-semibold text-slate-700">${idx + 1}. ${w.nama}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-800">${w.kat}</span>
+          `;
+          absentContainer.appendChild(item);
+        });
+      }
+    }
+  </script>
+</body>
+</html>
