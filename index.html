@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>e-Hadir Guru & Perhimpunan 2027 - SMK Kamarul Ariffin</title>
-  <!-- Tailwind CSS & FontAwesome -->
+  <title>e-Hadir Guru & Dashboard 2027 - SMK Kamarul Ariffin</title>
+  <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .pulse-ring {
       animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
@@ -24,13 +24,13 @@
 
   <!-- TOP HEADER -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center space-x-3.5">
         <img src="logo.png" alt="Logo SMK Kamarul Ariffin" class="h-12 sm:h-14 w-auto object-contain drop-shadow-sm" onerror="this.src='https://placehold.co/100x120?text=SMKKA'"/>
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-lg sm:text-xl font-black text-blue-900 tracking-tight">SMK KAMARUL ARIFFIN</h1>
-            <span class="bg-amber-400 text-slate-900 text-xs px-2 py-0.5 rounded-full font-black shadow-2xs">2027</span>
+            <span class="bg-amber-400 text-slate-900 text-xs px-2.5 py-0.5 rounded-full font-black shadow-2xs">2027</span>
           </div>
           <p class="text-xs sm:text-sm font-semibold text-blue-800 flex items-center gap-1.5">
             <i class="fa-solid fa-location-crosshairs text-rose-600"></i> Sistem e-Hadir Guru, AKP & Catatan Perhimpunan
@@ -38,41 +38,214 @@
         </div>
       </div>
 
-      <!-- TABS NAVIGATION -->
-      <nav class="flex bg-slate-100 p-1.5 rounded-xl gap-1">
-        <button onclick="switchTab('kehadiran')" id="tab-kehadiran" class="px-3 py-1.5 rounded-lg font-bold text-xs sm:text-sm bg-white text-blue-900 shadow-sm transition">
-          <i class="fa-solid fa-user-check mr-1"></i> Kehadiran
+      <!-- TABS NAVIGATION (4 MENU) -->
+      <nav class="flex bg-slate-100 p-1.5 rounded-xl gap-1 overflow-x-auto">
+        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm bg-white text-blue-900 shadow-xs transition flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-chart-pie text-blue-900"></i> Dashboard
         </button>
-        <button onclick="switchTab('catatan')" id="tab-catatan" class="px-3 py-1.5 rounded-lg font-bold text-xs sm:text-sm text-slate-600 hover:text-blue-900 transition">
-          <i class="fa-solid fa-book-bookmark mr-1"></i> Catatan Perhimpunan
+        <button onclick="switchTab('kehadiran')" id="tab-kehadiran" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm text-slate-600 hover:text-blue-900 transition flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-user-check"></i> e-Hadir (GPS)
         </button>
-        <button onclick="switchTab('admin')" id="tab-admin" class="px-3 py-1.5 rounded-lg font-bold text-xs sm:text-sm text-rose-700 hover:bg-rose-50 transition">
-          <i class="fa-solid fa-user-shield mr-1"></i> Admin
+        <button onclick="switchTab('catatan')" id="tab-catatan" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm text-slate-600 hover:text-blue-900 transition flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-book-bookmark"></i> Catatan Perhimpunan
+        </button>
+        <button onclick="switchTab('admin')" id="tab-admin" class="px-3.5 py-2 rounded-lg font-bold text-xs sm:text-sm text-rose-700 hover:bg-rose-50 transition flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-user-shield"></i> Admin
         </button>
       </nav>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full space-y-6">
+  <!-- WIDGET PANEL MASA & TARIKH AUTOMATIK -->
+  <section class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white border-b border-blue-800 shadow-inner">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+      <!-- Tarikh Automatik -->
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center text-xl text-amber-300 border border-white/15">
+          <i class="fa-solid fa-calendar-days"></i>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase font-bold tracking-widest text-blue-200 block">Tarikh Semasa (Auto)</span>
+          <p id="liveDateAuto" class="text-sm sm:text-base font-extrabold tracking-tight">Memuatkan tarikh...</p>
+        </div>
+      </div>
 
-    <!-- ==================== TAB 1: KEHADIRAN GEOFENCING GPS ==================== -->
-    <section id="page-kehadiran" class="block space-y-6">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 p-5 sm:p-6 text-white flex flex-wrap justify-between items-center gap-4">
+      <!-- Jam Digital Automatik -->
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center text-xl text-amber-300 border border-white/15">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase font-bold tracking-widest text-blue-200 block">Waktu Sistem (Auto)</span>
+          <p id="liveTimeAuto" class="font-mono text-lg sm:text-2xl font-black text-amber-300 tracking-wider">--:--:--</p>
+        </div>
+      </div>
+
+      <!-- Status Sesi Sekolah -->
+      <div class="hidden sm:flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/15 text-xs">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="font-semibold text-blue-100" id="liveSessionStatus">Sesi Pagi Aktif</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full space-y-6">
+
+    <!-- ==================== TAB 1: DASHBOARD UTAMA ==================== -->
+    <section id="page-dashboard" class="block space-y-6">
+      <!-- Kad Metrik Ringkasan Atas -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Kadar Kehadiran -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold">
+            <i class="fa-solid fa-percent"></i>
+          </div>
           <div>
-            <span class="bg-blue-800 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block mb-1">
-              Radius Sah: 50 Meter Dari Titik GPS
-            </span>
-            <h2 class="text-lg sm:text-xl font-bold">Borang Pengesahan Kehadiran Majlis</h2>
-            <p class="text-blue-200 text-xs sm:text-sm">
-              Sila pastikan GPS peranti diaktifkan untuk pengesahan lokasi secara automatik.
-            </p>
+            <p class="text-xs font-bold text-slate-500 uppercase">Kadar Kehadiran</p>
+            <h3 class="text-2xl font-black text-emerald-600" id="dashRatePct">0.0%</h3>
           </div>
-          <div class="text-right bg-white/10 px-3.5 py-2 rounded-xl border border-white/20">
-            <span class="text-[10px] uppercase font-bold text-blue-200 block tracking-wider">Masa Semasa</span>
-            <span id="liveClock" class="font-mono font-black text-base text-amber-300">--:--:--</span>
+        </div>
+
+        <!-- Jumlah Hadir -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-xl font-bold">
+            <i class="fa-solid fa-user-check"></i>
           </div>
+          <div>
+            <p class="text-xs font-bold text-slate-500 uppercase">Jumlah Hadir Hari Ini</p>
+            <h3 class="text-2xl font-black text-blue-900" id="dashPresentCount">0 / 31</h3>
+          </div>
+        </div>
+
+        <!-- Belum Hadir -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl font-bold">
+            <i class="fa-solid fa-user-xmark"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-500 uppercase">Belum Sahkan Hadir</p>
+            <h3 class="text-2xl font-black text-rose-600" id="dashAbsentCount">31 Orang</h3>
+          </div>
+        </div>
+
+        <!-- Jumlah Catatan -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center text-xl font-bold">
+            <i class="fa-solid fa-book-open-reader"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-500 uppercase">Catatan Perhimpunan</p>
+            <h3 class="text-2xl font-black text-teal-800" id="dashCatatanCount">0 Catatan</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- KAD PECAHAN MENGIKUT 3 PROGRAM & BAR KEMAJUAN -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-5">
+        <div class="flex flex-wrap justify-between items-center gap-3">
+          <div>
+            <h3 class="font-bold text-base sm:text-lg text-slate-800">Status Semakan Kehadiran Mengikut Majlis / Program</h3>
+            <p class="text-xs text-slate-500">Pecahan bilangan guru dan staf yang mendaftar mengikut titik geofence masing-masing.</p>
+          </div>
+          <button onclick="loadAllData()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-rotate" id="refreshIconDash"></i> Segerak Data
+          </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-bold">
+            <span class="text-slate-600">Pencapaian Enrolmen Warga Sekolah (31 Orang)</span>
+            <span class="text-blue-900" id="dashProgressBarText">0% Disahkan</span>
+          </div>
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="dashProgressBar" class="bg-gradient-to-r from-blue-900 to-emerald-600 h-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- 3 Kad Program -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+          <!-- Perhimpunan Rasmi -->
+          <div class="p-4 rounded-xl border border-blue-200 bg-blue-50/50 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold text-blue-800 uppercase block">Perhimpunan Rasmi</span>
+              <p class="text-2xl font-black text-blue-950 mt-1" id="dashCountPerhimpunan">0</p>
+              <span class="text-[10px] text-slate-500 font-semibold">Radius: 50m Dataran</span>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-blue-200 text-blue-900 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-users"></i>
+            </div>
+          </div>
+
+          <!-- Budaya Al-Quran -->
+          <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold text-emerald-800 uppercase block">Budaya Al-Quran</span>
+              <p class="text-2xl font-black text-emerald-950 mt-1" id="dashCountQuran">0</p>
+              <span class="text-[10px] text-slate-500 font-semibold">Radius: 50m Surau</span>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-200 text-emerald-900 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-book-quran"></i>
+            </div>
+          </div>
+
+          <!-- Program Moral -->
+          <div class="p-4 rounded-xl border border-purple-200 bg-purple-50/50 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold text-purple-800 uppercase block">Program Moral</span>
+              <p class="text-2xl font-black text-purple-950 mt-1" id="dashCountMoral">0</p>
+              <span class="text-[10px] text-slate-500 font-semibold">Radius: 50m Bilik Moral</span>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-purple-200 text-purple-900 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-heart-handshake"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOG AKTIVITI KEHADIRAN TERKINI HARI INI -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 flex flex-wrap justify-between items-center gap-3">
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Aktiviti Kehadiran Terkini Hari Ini</h3>
+            <p class="text-xs text-slate-500">Memaparkan pendaftaran guru dan AKP yang telah disahkan melalui sistem geofence.</p>
+          </div>
+          <button onclick="switchTab('kehadiran')" class="text-xs bg-blue-900 hover:bg-blue-800 text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-2xs">
+            <i class="fa-solid fa-plus"></i> Imbas / Isi Kehadiran
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 font-bold text-xs uppercase border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-5">Masa</th>
+                <th class="py-3 px-5">Nama Guru / AKP</th>
+                <th class="py-3 px-5">Program</th>
+                <th class="py-3 px-5">Jarak GPS</th>
+                <th class="py-3 px-5">Status</th>
+              </tr>
+            </thead>
+            <tbody id="dashLiveTableBody" class="divide-y divide-slate-100 text-xs">
+              <tr><td colspan="5" class="text-center py-6 text-slate-400 italic">Memuatkan data kehadiran...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: BORANG KEHADIRAN GEOFENCING GPS ==================== -->
+    <section id="page-kehadiran" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 p-5 sm:p-6 text-white space-y-1">
+          <span class="bg-blue-800 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block">
+            Radius Sah: 50 Meter Dari Titik GPS
+          </span>
+          <h2 class="text-lg sm:text-xl font-bold">Borang Pengesahan Kehadiran Majlis</h2>
+          <p class="text-blue-200 text-xs sm:text-sm">
+            Sila pastikan GPS peranti diaktifkan untuk pengesahan lokasi secara automatik.
+          </p>
         </div>
 
         <div class="p-5 sm:p-6 space-y-5">
@@ -129,7 +302,7 @@
                 </div>
                 <div>
                   <h4 class="font-bold text-slate-800 text-sm" id="gpsStatusTitle">Mengimbas Lokasi GPS Anda...</h4>
-                  <p class="text-xs text-slate-500 font-medium" id="gpsStatusDesc">Sila pastikan anda menekan 'Allow' pada notifikasi akses lokasi pelayar.</p>
+                  <p class="text-xs text-slate-500 font-medium" id="gpsStatusDesc">Sila benarkan ('Allow') akses lokasi pelayar.</p>
                 </div>
               </div>
 
@@ -158,48 +331,15 @@
           </button>
         </div>
       </div>
-
-      <!-- Jadual Kehadiran Terkini Hari Ini -->
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="px-5 py-4 border-b border-slate-200 flex flex-wrap justify-between items-center gap-3">
-          <div>
-            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Senarai Kehadiran Disahkan Hari Ini</h3>
-            <p class="text-xs text-slate-500">Rekod pendaftaran guru dan AKP mengikut masa dan jarak sah GPS.</p>
-          </div>
-          <button onclick="loadAllData()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
-            <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i> Muat Semula
-          </button>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 text-slate-500 font-bold text-xs uppercase border-b border-slate-200">
-              <tr>
-                <th class="py-3 px-4">Masa</th>
-                <th class="py-3 px-4">Program</th>
-                <th class="py-3 px-4">Nama Guru / AKP</th>
-                <th class="py-3 px-4">Jarak</th>
-                <th class="py-3 px-4">ID Peranti</th>
-                <th class="py-3 px-4">Status</th>
-              </tr>
-            </thead>
-            <tbody id="attendanceTableBody" class="divide-y divide-slate-100 text-xs">
-              <tr><td colspan="6" class="text-center py-6 text-slate-400 italic">Memuatkan rekod pendaftaran...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </section>
 
-    <!-- ==================== TAB 2: CATATAN PERHIMPUNAN RASMI ==================== -->
+    <!-- ==================== TAB 3: CATATAN PERHIMPUNAN RASMI ==================== -->
     <section id="page-catatan" class="hidden space-y-6">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="bg-gradient-to-r from-teal-900 via-teal-800 to-cyan-900 p-5 sm:p-6 text-white space-y-1">
-          <div class="flex items-center gap-2">
-            <span class="bg-teal-700 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block">
-              Perhimpunan Rasmi Mingguan
-            </span>
-          </div>
+          <span class="bg-teal-700 text-amber-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full inline-block">
+            Perhimpunan Rasmi Mingguan
+          </span>
           <h2 class="text-lg sm:text-xl font-bold">Borang Catatan Ucapan & Amanat Perhimpunan</h2>
           <p class="text-teal-200 text-xs sm:text-sm">
             Direkodkan oleh guru bertugas mingguan bagi tujuan dokumentasi dan rujukan pihak sekolah.
@@ -239,28 +379,26 @@
         </div>
       </div>
 
-      <!-- Senarai Rekod Catatan Perhimpunan -->
+      <!-- Arkib Catatan Perhimpunan -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="px-5 py-4 border-b border-slate-200 flex justify-between items-center">
           <h3 class="font-bold text-slate-800 text-sm sm:text-base">Arkib Catatan Ucapan Perhimpunan</h3>
           <span class="text-xs bg-teal-100 text-teal-800 font-bold px-2.5 py-1 rounded-full" id="countCatatanBadge">0 Catatan</span>
         </div>
         <div id="catatanCardsList" class="p-5 space-y-4 max-h-[500px] overflow-y-auto">
-          <!-- Kad catatan diisi JS -->
         </div>
       </div>
     </section>
 
-    <!-- ==================== TAB 3: ADMIN PERHIMPUNAN ==================== -->
+    <!-- ==================== TAB 4: ADMIN PERHIMPUNAN ==================== -->
     <section id="page-admin" class="hidden space-y-6">
-      <!-- Admin Login Box -->
       <div id="adminAuthBox" class="max-w-md mx-auto bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         <div class="text-center space-y-2">
           <div class="w-14 h-14 bg-rose-100 text-rose-700 rounded-2xl flex items-center justify-center mx-auto text-2xl">
             <i class="fa-solid fa-lock"></i>
           </div>
           <h3 class="text-lg font-bold text-slate-800">Akses Pentadbir (Admin)</h3>
-          <p class="text-xs text-slate-500">Sila masukkan kata laluan untuk melihat laporan kehadiran penuh & pengurusan pangkalan data.</p>
+          <p class="text-xs text-slate-500">Sila masukkan kata laluan untuk pengurusan pentadbir.</p>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Kata Laluan Admin</label>
@@ -271,7 +409,6 @@
         </button>
       </div>
 
-      <!-- Admin Panel (Muncul selepas login berjaya) -->
       <div id="adminPanelBox" class="hidden space-y-6">
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
           <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-100 pb-4">
@@ -279,17 +416,16 @@
               <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
                 <i class="fa-solid fa-chart-pie text-blue-900"></i> Panel Kawalan Pentadbir
               </h3>
-              <p class="text-xs text-slate-500">Analisis kehadiran warga sekolah bagi sesi persekolahan 2027.</p>
+              <p class="text-xs text-slate-500">Semakan guru & AKP yang belum mendaftar kehadiran hari ini.</p>
             </div>
             <button onclick="adminLogout()" class="text-xs text-rose-600 font-bold hover:underline">
               <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Log Keluar Admin
             </button>
           </div>
 
-          <!-- Ringkasan Kehadiran Guru Hari Ini -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
-              <p class="text-xs font-bold text-blue-800">Jumlah Warga (Guru & AKP)</p>
+              <p class="text-xs font-bold text-blue-800">Jumlah Keseluruhan Warga</p>
               <p class="text-2xl font-black text-blue-950 mt-1">31 Orang</p>
             </div>
             <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
@@ -302,11 +438,9 @@
             </div>
           </div>
 
-          <!-- Senarai Guru Yang Belum Mengesahkan Kehadiran -->
           <div class="space-y-2">
             <h4 class="font-bold text-sm text-slate-700">Senarai Guru / AKP Belum Mengesahkan Kehadiran Hari Ini:</h4>
-            <div id="adminAbsentListContainer" class="p-4 bg-slate-50 rounded-xl border border-slate-200 max-h-[220px] overflow-y-auto text-xs grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <!-- Senarai dijana JS -->
+            <div id="adminAbsentListContainer" class="p-4 bg-slate-50 rounded-xl border border-slate-200 max-h-[260px] overflow-y-auto text-xs grid grid-cols-1 sm:grid-cols-2 gap-2">
             </div>
           </div>
         </div>
@@ -316,7 +450,7 @@
   </main>
 
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
-    &copy; 2027 SMK Kamarul Ariffin (JEA7039). Dikuasakan oleh Google Cloud & GitHub Pages.
+    &copy; 2027 SMK Kamarul Ariffin (JEA7039). Hak Cipta Terpelihara. Sistem Geofencing & Pengurusan Majlis Rasmi.
   </footer>
 
   <!-- ==================== JAVASCRIPT ==================== -->
@@ -346,7 +480,7 @@
       }
     };
 
-    // SENARAI GURU & AKP RASMI APDM JEA7039
+    // SENARAI GURU & AKP RASMI APDM JEA7039 (31 ORANG)
     const SENARAI_WARGA = [
       { nama: "ABD HADI B ADMAN", kat: "GURU" },
       { nama: "JESSICA CHAN LAI PENG", kat: "GURU" },
@@ -390,7 +524,7 @@
     let serverCatatanData = [];
 
     window.onload = function() {
-      initClock();
+      initClockAndCalendar();
       populateDropdowns();
       deviceFingerprintId = getOrGenerateDeviceId();
       document.getElementById('displayDeviceId').innerText = deviceFingerprintId;
@@ -398,11 +532,40 @@
       loadAllData();
     };
 
-    function initClock() {
-      setInterval(() => {
-        document.getElementById('liveClock').innerText = new Date().toLocaleTimeString('ms-MY', { hour12: false });
-      }, 1000);
-      document.getElementById('liveClock').innerText = new Date().toLocaleTimeString('ms-MY', { hour12: false });
+    // FUNGSI PAPARAN MASA & TARIKH AUTOMATIK (MENU LIVE)
+    function initClockAndCalendar() {
+      const hariMap = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+      const bulanMap = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
+
+      function update() {
+        const now = new Date();
+        const hari = hariMap[now.getDay()];
+        const tarikh = now.getDate();
+        const bulan = bulanMap[now.getMonth()];
+        const tahun = now.getFullYear();
+
+        const timeStr = now.toLocaleTimeString('ms-MY', { hour12: false });
+        const dateStr = `${hari}, ${tarikh} ${bulan} ${tahun}`;
+
+        document.getElementById('liveDateAuto').innerText = dateStr;
+        document.getElementById('liveTimeAuto').innerText = timeStr;
+
+        // Status sesi
+        const hour = now.getHours();
+        const sessionEl = document.getElementById('liveSessionStatus');
+        if (sessionEl) {
+          if (hour >= 6 && hour < 8) {
+            sessionEl.innerText = "Sesi Pagi / Perhimpunan Bermula";
+          } else if (hour >= 8 && hour < 14) {
+            sessionEl.innerText = "Sesi Pengajaran & Pembelajaran";
+          } else {
+            sessionEl.innerText = "Sesi Luar Waktu Rasmi";
+          }
+        }
+      }
+
+      setInterval(update, 1000);
+      update();
     }
 
     function populateDropdowns() {
@@ -412,7 +575,6 @@
       selectGuru.innerHTML = '<option value="" disabled selected>-- Sila Pilih Nama Anda --</option>';
       selectPencatat.innerHTML = '<option value="" disabled selected>-- Pilih Nama Guru Pencatat --</option>';
 
-      // Guru Group
       const optGGuru = document.createElement('optgroup');
       optGGuru.label = "SENARAI GURU (26 ORANG)";
       const optGPencatat = document.createElement('optgroup');
@@ -432,7 +594,6 @@
       selectGuru.appendChild(optGGuru);
       selectPencatat.appendChild(optGPencatat);
 
-      // AKP Group
       const optGAKP = document.createElement('optgroup');
       optGAKP.label = "ANGGOTA KUMPULAN PELAKSANA (AKP)";
       SENARAI_WARGA.filter(w => w.kat === "AKP").forEach(a => {
@@ -456,16 +617,17 @@
     }
 
     function switchTab(tabId) {
-      ['kehadiran', 'catatan', 'admin'].forEach(t => {
+      ['dashboard', 'kehadiran', 'catatan', 'admin'].forEach(t => {
         document.getElementById(`page-${t}`).classList.add('hidden');
-        document.getElementById(`tab-${t}`).classList.remove('bg-white', 'text-blue-900', 'shadow-sm');
+        document.getElementById(`tab-${t}`).classList.remove('bg-white', 'text-blue-900', 'shadow-xs');
         document.getElementById(`tab-${t}`).classList.add('text-slate-600');
       });
 
       document.getElementById(`page-${tabId}`).classList.remove('hidden');
-      document.getElementById(`tab-${tabId}`).classList.add('bg-white', 'text-blue-900', 'shadow-sm');
+      document.getElementById(`tab-${tabId}`).classList.add('bg-white', 'text-blue-900', 'shadow-xs');
       document.getElementById(`tab-${tabId}`).classList.remove('text-slate-600');
 
+      if (tabId === 'dashboard') renderDashboardView();
       if (tabId === 'admin') renderAdminStats();
     }
 
@@ -491,7 +653,7 @@
     // GEOLOCATION ENGINE
     function startLocationWatch() {
       if (!navigator.geolocation) {
-        updateGPSUIStatus(false, "Pelayar Tidak Menyokong GPS", "Gunakan pelayar moden pada telefon pintar anda.");
+        updateGPSUIStatus(false, "Pelayar Tidak Menyokong GPS", "Gunakan pelayar Chrome atau Safari pada telefon pintar anda.");
         return;
       }
 
@@ -504,7 +666,7 @@
         },
         (error) => {
           let msg = "Sila aktifkan GPS telefon anda.";
-          if (error.code === 1) msg = "Kebenaran GPS dinafikan. Sila klik 'Allow' pada tetapan pelayar anda.";
+          if (error.code === 1) msg = "Kebenaran GPS dinafikan. Sila klik 'Allow' pada pelayar anda.";
           updateGPSUIStatus(false, "GPS Tidak Aktif / Akses Disekat", msg);
         },
         { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
@@ -611,8 +773,9 @@
           body: JSON.stringify(payload)
         });
 
-        alert(`Kehadiran bagi ${nama} (${targetProgram}) berjaya disimpan ke Google Sheets!`);
+        alert(`Tahniah! Kehadiran bagi ${nama} (${targetProgram}) berjaya direkodkan.`);
         setTimeout(loadAllData, 1500);
+        switchTab('dashboard');
       } catch (e) {
         alert("Ralat: " + e.message);
       } finally {
@@ -668,9 +831,9 @@
       }
     }
 
-    // MUAT TURUN SEMUA DATA
+    // MUAT TURUN SEMUA DATA DARI GOOGLE APPS SCRIPT
     async function loadAllData() {
-      const refreshIcon = document.getElementById('refreshIcon');
+      const refreshIcon = document.getElementById('refreshIconDash');
       if (refreshIcon) refreshIcon.classList.add('fa-spin');
 
       try {
@@ -679,12 +842,13 @@
 
         if (data.attendance) {
           serverAttendanceData = data.attendance;
-          renderAttendanceTable(serverAttendanceData);
+          renderDashboardView();
         }
 
         if (data.catatan) {
           serverCatatanData = data.catatan;
           renderCatatanCards(serverCatatanData);
+          document.getElementById('dashCatatanCount').innerText = `${serverCatatanData.length} Catatan`;
         }
       } catch (e) {
         console.warn("Gagal memuat turun data:", e);
@@ -693,15 +857,46 @@
       }
     }
 
-    function renderAttendanceTable(records) {
-      const tbody = document.getElementById('attendanceTableBody');
+    // LOGIK PAPARAN DASHBOARD
+    function renderDashboardView() {
+      const today = new Date().toISOString().split('T')[0];
+      const todayRecords = serverAttendanceData.filter(r => r.tarikh === today);
+
+      const totalWarga = SENARAI_WARGA.length; // 31
+      const hadirCount = todayRecords.length;
+      const absentCount = Math.max(0, totalWarga - hadirCount);
+      const pct = totalWarga > 0 ? ((hadirCount / totalWarga) * 100).toFixed(1) : 0;
+
+      // Kemaskini Metrik Atas
+      document.getElementById('dashRatePct').innerText = `${pct}%`;
+      document.getElementById('dashPresentCount').innerText = `${hadirCount} / ${totalWarga}`;
+      document.getElementById('dashAbsentCount').innerText = `${absentCount} Orang`;
+
+      // Progress Bar
+      document.getElementById('dashProgressBar').style.width = `${pct}%`;
+      document.getElementById('dashProgressBarText').innerText = `${pct}% Disahkan (${hadirCount}/${totalWarga})`;
+
+      // Pecahan 3 Program
+      let cPerhimpunan = 0;
+      let cQuran = 0;
+      let cMoral = 0;
+
+      todayRecords.forEach(r => {
+        if (r.program.includes("Perhimpunan")) cPerhimpunan++;
+        else if (r.program.includes("Quran")) cQuran++;
+        else if (r.program.includes("Moral")) cMoral++;
+      });
+
+      document.getElementById('dashCountPerhimpunan').innerText = cPerhimpunan;
+      document.getElementById('dashCountQuran').innerText = cQuran;
+      document.getElementById('dashCountMoral').innerText = cMoral;
+
+      // Jadual Log Aktiviti Kehadiran Terkini
+      const tbody = document.getElementById('dashLiveTableBody');
       tbody.innerHTML = '';
 
-      const today = new Date().toISOString().split('T')[0];
-      const todayRecords = records.filter(r => r.tarikh === today);
-
       if (todayRecords.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 italic">Belum ada pengesahan kehadiran direkodkan untuk hari ini.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400 italic">Belum ada warga sekolah yang mengesahkan kehadiran hari ini.</td></tr>`;
         return;
       }
 
@@ -709,12 +904,11 @@
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50 transition";
         tr.innerHTML = `
-          <td class="py-3 px-4 font-mono font-bold text-slate-700">${row.masa}</td>
-          <td class="py-3 px-4"><span class="font-bold text-blue-900">${row.program}</span></td>
-          <td class="py-3 px-4 font-semibold text-slate-800">${row.nama}</td>
-          <td class="py-3 px-4 font-mono text-slate-600">${row.jarak}</td>
-          <td class="py-3 px-4 font-mono text-[10px] text-slate-400">${row.deviceId}</td>
-          <td class="py-3 px-4">
+          <td class="py-3 px-5 font-mono font-bold text-slate-700">${row.masa}</td>
+          <td class="py-3 px-5 font-semibold text-slate-800">${row.nama}</td>
+          <td class="py-3 px-5"><span class="font-bold text-blue-900">${row.program}</span></td>
+          <td class="py-3 px-5 font-mono text-slate-600">${row.jarak}</td>
+          <td class="py-3 px-5">
             <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded text-[11px] font-bold">
               <i class="fa-solid fa-check"></i> Sah (GPS)
             </span>
@@ -734,7 +928,6 @@
         return;
       }
 
-      // Susun terkini di atas
       const sorted = [...notes].reverse();
 
       sorted.forEach(note => {
@@ -759,7 +952,7 @@
       });
     }
 
-    // ==================== ADMIN LOGIC ====================
+    // ADMIN LOGIC
     function verifyAdminPassword() {
       const pwd = document.getElementById('adminPasswordInput').value;
       if (pwd === "adminperhimpunan") {
@@ -795,11 +988,11 @@
       const absentList = SENARAI_WARGA.filter(w => !presentNames.includes(w.nama));
 
       if (absentList.length === 0) {
-        absentContainer.innerHTML = `<p class="col-span-2 text-center text-emerald-700 py-4 font-bold">Hebat! Semua guru dan AKP telah mengesahkan kehadiran hari ini.</p>`;
+        absentContainer.innerHTML = `<p class="col-span-2 text-center text-emerald-700 py-4 font-bold">Semua guru dan AKP telah mengesahkan kehadiran hari ini!</p>`;
       } else {
         absentList.forEach((w, idx) => {
           const item = document.createElement('div');
-          item.className = "flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200";
+          item.className = "flex items-center justify-between p-2.5 bg-white rounded-lg border border-slate-200";
           item.innerHTML = `
             <span class="font-semibold text-slate-700">${idx + 1}. ${w.nama}</span>
             <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-800">${w.kat}</span>
